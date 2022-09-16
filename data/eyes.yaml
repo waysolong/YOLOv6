@@ -1,0 +1,10 @@
+# Please insure that your custom_dataset are put in same parent dir with YOLOv6_DIR
+train: coco/images/train # train images
+val: coco/images/val # val images
+# test: ../custom_dataset/images/test # test images (optional)
+
+# whether it is coco dataset, only coco dataset should be set to True.
+is_coco: False
+# Classes
+nc: 4  # number of classes
+names: ['closed_eye', 'closed_mouth', 'open_eye', 'open_mouth']  # class names
