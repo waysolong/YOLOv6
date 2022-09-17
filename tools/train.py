@@ -42,7 +42,7 @@ def get_args_parser(add_help=True):
     parser.add_argument('--dist_url', default='env://', type=str, help='url used to set up distributed training')
     parser.add_argument('--gpu_count', type=int, default=0)
     parser.add_argument('--local_rank', type=int, default=-1, help='DDP parameter')
-    parser.add_argument('--resume', nargs='?', const=True, default="runs/train\exp77\weights\last_ckpt.pt", help='resume the most recent training')
+    parser.add_argument('--resume', nargs='?', const=True,  help='resume the most recent training')#default="runs/train\exp77\weights\last_ckpt.pt",
 
     return parser
 
