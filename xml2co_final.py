@@ -6,7 +6,7 @@
 import xml.etree.ElementTree as ET
 import os
 import json
-
+from tqdm import tqdm
 
 
 category_set = {'closed_eye': 0, 'closed_mouth': 1, 'open_eye': 2, 'open_mouth': 3}
@@ -54,20 +54,20 @@ def addAnnoItem(object_name, image_id, category_id, bbox,size):
     global annotation_id,coco
     annotation_item = dict()
     annotation_item['segmentation'] = []
-    seg = []
-    # bbox[] is x,y,w,h
-    # left_top
-    seg.append(bbox[0])
-    seg.append(bbox[1])
-    # left_bottom
-    seg.append(bbox[0])
-    seg.append(bbox[1] + bbox[3])
-    # right_bottom
-    seg.append(bbox[0] + bbox[2])
-    seg.append(bbox[1] + bbox[3])
-    # right_top
-    seg.append(bbox[0] + bbox[2])
-    seg.append(bbox[1])
+    # seg = []
+    # # bbox[] is x,y,w,h
+    # # left_top
+    # seg.append(bbox[0])
+    # seg.append(bbox[1])
+    # # left_bottom
+    # seg.append(bbox[0])
+    # seg.append(bbox[1] + bbox[3])
+    # # right_bottom
+    # seg.append(bbox[0] + bbox[2])
+    # seg.append(bbox[1] + bbox[3])
+    # # right_top
+    # seg.append(bbox[0] + bbox[2])
+    # seg.append(bbox[1])
 
     
     # annotation_item['category_id'] = category_id
@@ -82,10 +82,10 @@ def addAnnoItem(object_name, image_id, category_id, bbox,size):
     # annotation_item['segmentation'].append(seg)
     coco += str(category_id)
     wh_list =[size["width"],size["height"]] 
-    for i in bbox:
-        coco=coco+" "+str(i/wh_list[i%2])
-    coco =coco+"\n"
-    print(coco)
+    for i,val in enumerate(bbox):
+        coco = coco + " " + str(val/wh_list[i%2])
+    coco = coco + "\n"
+    # print(coco)
 
 
 def parseXmlFiles(xml_path):
@@ -93,7 +93,7 @@ def parseXmlFiles(xml_path):
     # for f in os.listdir(xml_path):
     #     if not f.endswith('.xml'):
     #         continue
-
+    # print(xml_path)
     bndbox = dict()
     size = dict()
     current_image_id = None
@@ -170,28 +170,29 @@ def parseXmlFiles(xml_path):
                     raise Exception('xml structure broken at bndbox tag')
                 bbox = []
                 # x
-                bbox.append(bndbox['xmin'])
+                bbox.append((bndbox['xmax'] + bndbox['xmin']) / 2)
                 # y
-                bbox.append(bndbox['ymin'])
+                bbox.append((bndbox['ymax'] + bndbox['ymin']) /2)
                 # w
                 bbox.append(bndbox['xmax'] - bndbox['xmin'])
                 # h
                 bbox.append(bndbox['ymax'] - bndbox['ymin'])
                 # print('add annotation with {},{},{},{}'.format(object_name, current_image_id, current_category_id,
                 #                                                bbox))
-                addAnnoItem(object_name, current_image_id, current_category_id, bbox,size)
+                addAnnoItem(object_name, current_image_id, current_category_id, bbox, size)
 
 
 if __name__ == '__main__':
 	#修改这里的两个地址，一个是xml文件的父目录；一个是生成的json文件的绝对路径
     xml_path = 'dataset/VOCdevkit/Annotations/'
-    json_file = 'coco/annotations'
-    
+    json_file = 'coco/labels'
+    if not os.path.exists(json_file):
+        os.mkdir(json_file)
     # coco['images'] = []
     # coco['type'] = 'instances'
     # coco['annotations'] = []
     # coco['categories'] = []
-    for name in os.listdir(xml_path)[:]:
+    for name in tqdm(os.listdir(xml_path)[:]):
         coco = ""
         parseXmlFiles(os.path.join(xml_path,name))
         save_name = os.path.join(json_file,name.split(".")[0]+".txt")
