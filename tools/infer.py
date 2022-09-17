@@ -17,7 +17,7 @@ from yolov6.core.inferer import Inferer
 
 def get_args_parser(add_help=True):
     parser = argparse.ArgumentParser(description='YOLOv6 PyTorch Inference.', add_help=add_help)
-    parser.add_argument('--weights', type=str, default='runs/train/exp77/weights/last_ckpt.pt', help='model path(s) for inference.')
+    parser.add_argument('--weights', type=str, default='runs/train/exp8/weights/last_ckpt.pt', help='model path(s) for inference.')
     parser.add_argument('--source', type=str, default='data/images', help='the source path, e.g. image-file/dir.')
     parser.add_argument('--yaml', type=str, default='data/eyes.yaml', help='data yaml file.')
     parser.add_argument('--img-size', type=int, default=640, help='the image-size(h,w) in inference size.')
@@ -30,7 +30,7 @@ def get_args_parser(add_help=True):
     parser.add_argument('--classes', nargs='+', type=int, help='filter by classes, e.g. --classes 0, or --classes 0 2 3.')
     parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS.')
     parser.add_argument('--project', default='runs/', help='save inference results to project/name.')
-    parser.add_argument('--name', default='exp', help='save inference results to project/name.')
+    parser.add_argument('--name', default='exps', help='save inference results to project/name.')
     parser.add_argument('--hide-labels', default=False, action='store_true', help='hide labels.')
     parser.add_argument('--hide-conf', default=False, action='store_true', help='hide confidences.')
     parser.add_argument('--half', action='store_true', help='whether to use FP16 half-precision inference.')
