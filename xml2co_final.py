@@ -172,7 +172,7 @@ def parseXmlFiles(xml_path):
                 # x
                 bbox.append((bndbox['xmax'] + bndbox['xmin']) / 2)
                 # y
-                bbox.append((bndbox['ymax'] + bndbox['ymin']) /2)
+                bbox.append((bndbox['ymax'] + bndbox['ymin']) / 2)
                 # w
                 bbox.append(bndbox['xmax'] - bndbox['xmin'])
                 # h
@@ -181,11 +181,7 @@ def parseXmlFiles(xml_path):
                 #                                                bbox))
                 addAnnoItem(object_name, current_image_id, current_category_id, bbox, size)
 
-
-if __name__ == '__main__':
-	#修改这里的两个地址，一个是xml文件的父目录；一个是生成的json文件的绝对路径
-    xml_path = 'dataset/VOCdevkit/Annotations/'
-    json_file = 'coco/labels'
+def train_val(xml_path, json_file):
     if not os.path.exists(json_file):
         os.mkdir(json_file)
     # coco['images'] = []
@@ -197,6 +193,12 @@ if __name__ == '__main__':
         parseXmlFiles(os.path.join(xml_path,name))
         save_name = os.path.join(json_file,name.split(".")[0]+".txt")
         with open(save_name,"w",encoding="utf-8") as f:
-
             f.write(str(coco))
+
+if __name__ == '__main__':
+	#修改这里的两个地址，一个是xml文件的父目录；一个是生成的json文件的绝对路径
+    for data_name in ["train", "val"]:
+        xml_path = 'coco/images/{}_label_xml'.format(data_name)
+        json_file = 'coco/labels/{}'.format(data_name)
+        train_val(xml_path, json_file)#生成含坐标信息的txt文件
 
